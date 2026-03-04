@@ -38,8 +38,9 @@ question_vectors = vectorizer.fit_transform(questions)
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 
-# Sidebar
+# Sidebar Quick Questions
 st.sidebar.title("Quick Questions")
+
 quick_options = [
     "What courses are available?",
     "What is the admission process?",
@@ -47,11 +48,18 @@ quick_options = [
     "What are the college timings?"
 ]
 
+selected_question = None
+
 for q in quick_options:
     if st.sidebar.button(q):
-        st.session_state.user_input = q
+        selected_question = q
 
+# Text input
 user_input = st.text_input("Type your question here...")
+
+# If button clicked, override user input
+if selected_question:
+    user_input = selected_question
 
 if user_input:
     if user_input.lower() in ["hi", "hello", "hey"]:
@@ -69,9 +77,3 @@ if user_input:
 
     st.session_state.chat_history.append(("You", user_input))
     st.session_state.chat_history.append(("Bot", response))
-
-for sender, message in st.session_state.chat_history:
-    if sender == "You":
-        st.markdown(f'<div class="chat-bubble-user">🧑 {message}</div>', unsafe_allow_html=True)
-    else:
-        st.markdown(f'<div class="chat-bubble-bot">🤖 {message}</div>', unsafe_allow_html=True)
